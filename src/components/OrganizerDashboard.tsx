@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EventConfig, CuratedPrompt, LivePost, TransitionType, Screen } from '../types.ts';
+import { EventConfig, CuratedPrompt, LivePost, TransitionType, Screen, UserProfile } from '../types.ts';
 
 interface OrganizerDashboardProps {
   config: EventConfig;
@@ -10,6 +10,8 @@ interface OrganizerDashboardProps {
   onNavigate: (screen: Screen, transition?: TransitionType) => void;
   onSelectPromptForAttendee: (prompt: CuratedPrompt) => void;
   showToast: (msg: string) => void;
+  currentProfile: UserProfile | null;
+  onOpenAuthModal: (mode: 'signin' | 'signup') => void;
 }
 
 export const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({
@@ -21,6 +23,8 @@ export const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({
   onNavigate,
   onSelectPromptForAttendee,
   showToast,
+  currentProfile,
+  onOpenAuthModal,
 }) => {
   const [copied, setCopied] = useState(false);
   const [emailBlasting, setEmailBlasting] = useState(false);
@@ -555,15 +559,22 @@ export const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({
 
             {/* Sticky Save & Publish Actions Bar */}
             <div className="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 border border-outline-variant/30">
-              <div className="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+              <div className="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm flex-wrap">
                 <span
                   className={`w-2 h-2 rounded-full ${hasUnsavedChanges ? 'bg-error animate-ping' : 'bg-primary'}`}
                 ></span>
                 <span>
                   {hasUnsavedChanges
                     ? 'Unsaved changes in event settings'
-                    : 'Last saved 2m ago by PulseTech Admin'}
+                    : `Last saved 2m ago by ${currentProfile?.name || 'PulseTech Admin'}`}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => onOpenAuthModal('signin')}
+                  className="text-xs text-primary font-semibold hover:underline ml-1 cursor-pointer"
+                >
+                  (Switch)
+                </button>
               </div>
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <button

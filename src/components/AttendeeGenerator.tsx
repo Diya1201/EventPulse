@@ -1,5 +1,5 @@
 import React, { useState, useId } from 'react';
-import { EventConfig, PhotoAsset } from '../types.ts';
+import { EventConfig, PhotoAsset, UserProfile } from '../types.ts';
 
 interface AttendeeGeneratorProps {
   config: EventConfig;
@@ -8,6 +8,8 @@ interface AttendeeGeneratorProps {
   selectedTone: string;
   setSelectedTone: (tone: string) => void;
   showToast: (msg: string) => void;
+  currentProfile: UserProfile | null;
+  onOpenAuthModal: (mode: 'signin' | 'signup') => void;
 }
 
 export const AttendeeGenerator: React.FC<AttendeeGeneratorProps> = ({
@@ -17,6 +19,8 @@ export const AttendeeGenerator: React.FC<AttendeeGeneratorProps> = ({
   selectedTone,
   setSelectedTone,
   showToast,
+  currentProfile,
+  onOpenAuthModal,
 }) => {
   const fileInputId = useId();
   const [isMobileView, setIsMobileView] = useState(false);
@@ -638,19 +642,34 @@ export const AttendeeGenerator: React.FC<AttendeeGeneratorProps> = ({
                 <div className="p-4 pb-3 flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <img
-                      alt="Sarah Jenkins portrait"
+                      alt={`${currentProfile?.name || 'Sarah Jenkins'} portrait`}
                       className="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-surface-container-low"
-                      src="https://lh3.googleusercontent.com/aida/AEtjO1XYq33tCqtSnpdeQ7RWvgfTHdqz6PbWoDYmguFclAkBbqFfiYIKxlbUjUtDga2vW7AgLOPKoozV4WGT_1LDCdackbNehchLrZZK6R2XqA4M1pzt4Htb93yPRn_d2af2WVycZUiFZTDams97-WQTuXRfw3paRkxPdjBmfb6hgluRk9dasOgxGnugULA5gxASBS947K8if6BbldJJrha6StRPmGh8Skgi1IBAObtVwD1sRIrcDZhjD6eu5xg"
+                      src={
+                        currentProfile?.avatarUrl ||
+                        'https://lh3.googleusercontent.com/aida/AEtjO1XYq33tCqtSnpdeQ7RWvgfTHdqz6PbWoDYmguFclAkBbqFfiYIKxlbUjUtDga2vW7AgLOPKoozV4WGT_1LDCdackbNehchLrZZK6R2XqA4M1pzt4Htb93yPRn_d2af2WVycZUiFZTDams97-WQTuXRfw3paRkxPdjBmfb6hgluRk9dasOgxGnugULA5gxASBS947K8if6BbldJJrha6StRPmGh8Skgi1IBAObtVwD1sRIrcDZhjD6eu5xg'
+                      }
                     />
                     <div className="flex flex-col min-w-0">
-                      <div className="flex items-center gap-1">
-                        <span className="font-label-lg text-label-lg text-on-surface font-bold hover:underline cursor-pointer">
-                          Sarah Jenkins
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span 
+                          onClick={() => onOpenAuthModal('signup')}
+                          className="font-label-lg text-label-lg text-on-surface font-bold hover:underline cursor-pointer"
+                          title="Click to edit profile"
+                        >
+                          {currentProfile?.name || 'Sarah Jenkins'}
                         </span>
                         <span className="text-secondary text-[12px] font-normal">• 1st</span>
+                        <button
+                          type="button"
+                          onClick={() => onOpenAuthModal('signin')}
+                          className="text-[10px] text-primary hover:underline font-semibold bg-primary/10 px-1.5 py-0.5 rounded cursor-pointer ml-1"
+                        >
+                          Switch
+                        </button>
                       </div>
                       <p className="font-body-sm text-[12px] text-secondary truncate max-w-md">
-                        VP of Product @ CloudScale | SaaS Summit Speaker | B2B SaaS Advisor
+                        {currentProfile?.headline ||
+                          'VP of Product @ CloudScale | SaaS Summit Speaker | B2B SaaS Advisor'}
                       </p>
                       <div className="flex items-center gap-1 text-secondary font-body-sm text-[11px]">
                         <span>Just now</span>
@@ -663,8 +682,9 @@ export const AttendeeGenerator: React.FC<AttendeeGeneratorProps> = ({
                   {/* LinkedIn 3-dots Menu Button */}
                   <button
                     type="button"
-                    onClick={() => showToast('Post options menu')}
+                    onClick={() => onOpenAuthModal('signup')}
                     className="p-1 rounded-full text-secondary hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer"
+                    title="Edit profile"
                   >
                     <span className="material-symbols-outlined text-[20px]">more_horiz</span>
                   </button>

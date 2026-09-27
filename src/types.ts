@@ -36,3 +36,14 @@ export interface PhotoAsset {
   url: string;
   active: boolean;
 }
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  email: string;
+  headline: string;
+  avatarUrl: string;
+  userType: 'organizer' | 'attendee';
+}
