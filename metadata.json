@@ -1,0 +1,6 @@
+{
+  "name": "EventPulse - Executive Event & Social Amplification Platform",
+  "description": "Configure event branding, manage post prompts, and empower attendees to generate viral LinkedIn posts in real-time.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
